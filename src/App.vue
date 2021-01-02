@@ -2,15 +2,24 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/404">404</router-link>
     </div>
 
-    <!-- 全局状态 -->
-    <p @click="$store.commit('add')">{{$store.state.count}}</p>
-    <p @click="$store.dispatch('add')">{{$store.state.count}}</p>
+    <div>
+      data：
+      {{$store.state}}
+    </div>
+    <div>
+      全局状态:
+      <p @click="$store.commit('add')">{{$store.state.count}}</p>
+    </div>
+    <div>
+      <p @click="$store.dispatch('add')">{{$store.state.count}}</p>
+    </div>
     <p>{{$store.getters.doubleCounter}}</p>
-    
-    <router-view/>
+    <p>{{$store.doubleCounter || '--'}}</p>
+    <router-view />
   </div>
 </template>
 

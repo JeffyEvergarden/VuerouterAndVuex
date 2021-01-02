@@ -4,7 +4,6 @@ let Vue;
 class VueRouter {
   constructor(options) {
     this.$options = options;
-
     // 声明一个响应式的current
     // 渲染函数如果要重复执行，必须依赖于响应式数据
     const initial = window.location.hash.slice(1) || "/";
