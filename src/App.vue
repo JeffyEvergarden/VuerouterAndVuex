@@ -18,7 +18,7 @@
       <p @click="$store.dispatch('add')">{{$store.state.count}}</p>
     </div>
     <p>{{$store.getters.doubleCounter}}</p>
-    <p>{{$store.doubleCounter || '--'}}</p>
+    <p>{{$store.cpGetters.doubleCounter}}</p>
     <router-view />
   </div>
 </template>
