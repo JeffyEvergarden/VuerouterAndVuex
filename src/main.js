@@ -4,7 +4,7 @@ import './plugins/element.js'
 
 import router from './krouter'
 import store from './kstore'
-import './test'
+// import './test'
 
 Vue.config.productionTip = false
 // 事件总线
