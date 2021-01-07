@@ -101,9 +101,9 @@ class Compile {
 	constructor(el, vm) {
 		this.$vm = vm
 		this.$el = document.querySelector(el)
-    console.log(this.$el) 
-    console.log(Object.getOwnPropertyNames(this.$el))
-    console.log(this.$el.nodeType)
+		// console.log(this.$el)
+		// console.log(Object.getOwnPropertyNames(this.$el))
+		// console.log(this.$el.nodeType)
 		this.compile(this.$el)
 	}
 
@@ -146,17 +146,21 @@ class Compile {
 	isEvent(attr) {
 		return attr.startsWith('@')
 	}
-
 	// 更新函数，
 	update(node, exp, dir) {
 		// init
-		const fn = this[dir + 'Updater']
-		fn && fn(node, this.$vm[exp])
-
-		// update: 创建Watcher
-		new Watcher(this.$vm, exp, function(val) {
-			fn && fn(node, val)
-		})
+		const fn = this[dir + 'Updater'].bind(this) // constructor 执行一次bind比较好
+		 // model 等特殊指令执行以下
+		if (['model'].includes(dir)) {
+			fn && fn(node, exp)
+			// input这里不需要watch更新视图
+		} else {
+			fn && fn(node, this.$vm[exp])
+			// update: 创建Watcher
+			new Watcher(this.$vm, exp, function(val) {
+				fn && fn(node, val)
+			})
+		}
 	}
 
 	// 编译文本，将{{ooxx}}
@@ -188,7 +192,8 @@ class Compile {
 			}
 		})
 	}
-
+	
+	// 点击事件执行
 	eventclick(node, exp) {
 		const fn = this.$vm[exp].bind(this.$vm)
 		node.addEventListener('click', () => {
@@ -208,6 +213,19 @@ class Compile {
 
 	htmlUpdater(node, val) {
 		node.innerHTML = val
+	}
+
+	model(node, exp) {
+		this.update(node, exp, 'model')
+	}
+	modelUpdater(node, exp) {
+		const vm = this.$vm
+		// 可以将事件加入vm对象的一个销毁数组，在beforedestroy的时候执行
+		node.addEventListener('input', (e) => {
+			// console.log(exp)
+			// console.log(e.target.value)
+			vm[exp] = e.target.value
+		})
 	}
 }
 
